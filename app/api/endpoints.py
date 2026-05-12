@@ -10,7 +10,7 @@ from app.services.image_utils import (
     validate_image_file,
     get_image_info
 )
-from app.services.llm_agent import analyze_repair_image
+from app.agents.repair_agent import get_agent
 from app.core.config import settings
 
 # 配置日志
@@ -32,19 +32,14 @@ router = APIRouter(prefix="/api/v1", tags=["repair-analysis"])
                 "application/json": {
                     "example": {
                         "success": True,
-                        "data": {
-                            "is_valid_image": True,
-                            "object_name": "空调出风口盖板",
-                            "issue_description": "盖板脱落",
-                            "reasoning": "图片显示白色塑料盖板与主体分离，地上可见脱落的盖板",
-                            "category": "物理损坏",
-                            "confidence": "High",
-                            "location": None,
-                            "urgency": "Medium"
-                        },
+                        "display_text": "办公室玻璃门关不严有缝隙，请安排维修。",
+                        "needs_human_confirm": True,
                         "metadata": {
                             "processing_time": 2.35,
-                            "image_size": "800x600"
+                            "image_size": "800x600",
+                            "confidence": "Medium",
+                            "urgency": "Medium",
+                            "category": "机械卡阻与五金故障"
                         }
                     }
                 }
@@ -101,14 +96,15 @@ async def analyze_repair(
     - TIFF
 
     **返回字段说明：**
-    - `is_valid_image`: 图片是否有效（清晰且包含设施）
-    - `object_name`: 识别的物件名称（尽可能具体）
-    - `issue_description`: 故障或需求描述
-    - `reasoning`: AI 推理原因（说明从图片中看到了什么）
-    - `category`: 问题分类（物理损坏/功能故障/异常状态/安装加固需求/未知）
-    - `confidence`: 置信度（High/Medium/Low）
-    - `location`: 位置信息（仅提取图片中能看到的，如门牌号）
-    - `urgency`: 紧急程度（High/Medium/Low）
+    - `success`: 请求是否成功
+    - `display_text`: 前端展示的一句话报修描述（自然流畅的中文）
+    - `needs_human_confirm`: 是否需要人工确认（置信度为 Medium/Low 时为 true）
+    - `metadata`: 元数据信息
+      - `processing_time`: 处理耗时（秒）
+      - `image_size`: 图片尺寸
+      - `confidence`: AI 置信度（High/Medium/Low）
+      - `urgency`: 紧急程度（High/Medium/Low）
+      - `category`: 问题分类
 
     **注意事项：**
     - 图片会自动压缩（长边最大 1024px）
@@ -180,10 +176,11 @@ async def analyze_repair(
                 }
             )
 
-        # 4. 调用 LLM 分析图片
+        # 4. 调用 LangChain Agent 分析图片
         try:
-            result = await analyze_repair_image(base64_image)
-            logger.info(f"LLM 分析完成: {result.get('object_name', 'N/A')}, "
+            agent = get_agent()
+            result = await agent.analyze(base64_image)
+            logger.info(f"LangChain Agent 分析完成: {result.get('object_name', 'N/A')}, "
                        f"置信度: {result.get('confidence', 'N/A')}")
         except Exception as e:
             logger.error(f"LLM 分析失败: {str(e)}")
@@ -203,12 +200,27 @@ async def analyze_repair(
         logger.info(f"请求处理完成，耗时: {processing_time}s")
 
         # 6. 构造响应
+        # 检查图片有效性
+        if not result.get("is_valid_image"):
+            return JSONResponse(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                content={
+                    "success": False,
+                    "message": result.get("rejection_reason", "图片内容无效")
+                }
+            )
+
+        # 组装前端友好的响应数据
         response_data = {
             "success": True,
-            "data": result,
+            "display_text": result.get("frontend_display_text"),
+            "needs_human_confirm": result.get("confidence") in ["Medium", "Low"],
             "metadata": {
                 "processing_time": processing_time,
-                "image_size": f"{image_info['width']}x{image_info['height']}" if image_info else "unknown"
+                "image_size": f"{image_info['width']}x{image_info['height']}" if image_info else "unknown",
+                "confidence": result.get("confidence"),
+                "urgency": result.get("urgency"),
+                "category": result.get("category")
             }
         }
 

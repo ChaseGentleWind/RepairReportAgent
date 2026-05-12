@@ -10,13 +10,10 @@ pydantic-settings==2.6.0
 # Image Processing
 Pillow==11.0.0
 
-# Agent Framework
+# LangChain Framework
 langchain==0.3.25
 langchain-core==0.3.86
 langchain-openai==0.2.9
-
-# OpenAI SDK (用于兼容通义千问 API)
-openai==1.54.5
 
 # Environment Variables
 python-dotenv==1.0.1

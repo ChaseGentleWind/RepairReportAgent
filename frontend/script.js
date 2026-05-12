@@ -142,7 +142,7 @@ async function analyzeImage() {
         if (response.ok && result.success) {
             showResult(result);
         } else {
-            const errorMsg = result.error?.message || '分析失败，请重试';
+            const errorMsg = result.message || result.error?.message || '分析失败，请重试';
             showError(errorMsg);
         }
     } catch (error) {
@@ -155,92 +155,71 @@ async function analyzeImage() {
 
 // 显示结果
 function showResult(result) {
-    const { data, metadata } = result;
+    const data = result.data || {};
+    const metadata = result.metadata || {};
 
-    let html = '';
+    const needsConfirm = !data.is_valid_image || data.confidence === 'Low';
 
-    if (data.is_valid_image) {
-        // 有效图片
-        html = `
-            <div class="result-valid">
-                <div class="result-header">
-                    <div class="result-icon">✅</div>
-                    <div class="result-status">
-                        <h3>分析成功</h3>
-                        <span class="status-badge badge-valid">图片有效</span>
-                    </div>
-                </div>
-
-                <div class="result-details">
-                    <div class="detail-item">
-                        <div class="detail-label">识别物件</div>
-                        <div class="detail-value">${escapeHtml(data.object_name)}</div>
-                    </div>
-
-                    <div class="detail-item">
-                        <div class="detail-label">故障描述</div>
-                        <div class="detail-value">${escapeHtml(data.issue_description)}</div>
-                    </div>
-
-                    <div class="detail-item">
-                        <div class="detail-label">问题分类</div>
-                        <div class="detail-value">${escapeHtml(data.category)}</div>
-                    </div>
-
-                    <div class="detail-item">
-                        <div class="detail-label">紧急程度</div>
-                        <div class="detail-value">
-                            <span class="urgency-badge urgency-${data.urgency.toLowerCase()}">
-                                ${getUrgencyText(data.urgency)}
-                            </span>
-                        </div>
-                    </div>
-
-                    ${data.location ? `
-                    <div class="detail-item">
-                        <div class="detail-label">位置信息</div>
-                        <div class="detail-value">${escapeHtml(data.location)}</div>
-                    </div>
-                    ` : ''}
-
-                    <div class="detail-item">
-                        <div class="detail-label">置信度</div>
-                        <div class="detail-value">
-                            <span class="confidence-badge confidence-${data.confidence.toLowerCase()}">
-                                ${data.confidence}
-                            </span>
-                            ${getConfidenceHint(data.confidence)}
-                        </div>
-                    </div>
-
-                    <div class="detail-item">
-                        <div class="detail-label">推理过程</div>
-                        <div class="detail-value detail-reasoning">${escapeHtml(data.reasoning)}</div>
-                    </div>
-                </div>
-            </div>
-        `;
+    let displayText = '';
+    if (!data.is_valid_image) {
+        displayText = data.rejection_reason || '图片无效';
     } else {
-        // 无效图片
-        html = `
-            <div class="result-invalid">
-                <div class="result-header">
-                    <div class="result-icon">❌</div>
-                    <div class="result-status">
-                        <h3>图片无效</h3>
-                        <span class="status-badge badge-invalid">已驳回</span>
-                    </div>
-                </div>
+        displayText = `${data.object_name || '未知物件'}: ${data.issue_description || '无描述'}`;
+    }
 
-                <div class="result-details">
-                    <div class="detail-item">
-                        <div class="detail-label">驳回原因</div>
-                        <div class="detail-value">${escapeHtml(data.rejection_reason)}</div>
-                    </div>
+    const html = `
+        <div class="result-valid">
+            <div class="result-header">
+                <div class="result-icon">✅</div>
+                <div class="result-status">
+                    <h3>分析成功</h3>
+                    <span class="status-badge badge-valid">图片有效</span>
                 </div>
             </div>
-        `;
-    }
+
+            <div class="result-main">
+                <div class="display-text">
+                    ${escapeHtml(displayText)}
+                </div>
+                ${needsConfirm ? `
+                    <div class="confirm-hint">
+                        <span class="hint-icon">⚠️</span>
+                        <span class="hint-text">AI 盲猜结果，请确认是否准确</span>
+                    </div>
+                ` : ''}
+            </div>
+
+            <div class="result-metadata">
+                <div class="metadata-item">
+                    <span class="metadata-label">问题分类</span>
+                    <span class="metadata-value">${escapeHtml(data.category || '未知')}</span>
+                </div>
+
+                <div class="metadata-item">
+                    <span class="metadata-label">紧急程度</span>
+                    <span class="metadata-value">
+                        <span class="urgency-badge urgency-${(data.urgency || 'medium').toLowerCase()}">
+                            ${getUrgencyText(data.urgency)}
+                        </span>
+                    </span>
+                </div>
+
+                <div class="metadata-item">
+                    <span class="metadata-label">置信度</span>
+                    <span class="metadata-value">
+                        <span class="confidence-badge confidence-${(data.confidence || 'medium').toLowerCase()}">
+                            ${data.confidence || 'Medium'}
+                        </span>
+                    </span>
+                </div>
+
+                <div class="metadata-item">
+                    <span class="metadata-label">处理时间</span>
+                    <span class="metadata-value">${metadata.processing_time?.toFixed(2) || 'N/A'}s</span>
+                </div>
+            </div>
+        </div>
+    `;
 
     resultContainer.innerHTML = html;
     resultSection.hidden = false;
@@ -273,16 +252,6 @@ function setLoading(loading) {
     } else {
         btnText.textContent = '开始分析';
     }
-}
-
-// 获取置信度提示
-function getConfidenceHint(confidence) {
-    const hints = {
-        'High': '<br><small style="color: #155724;">✓ 高置信度，可直接处理</small>',
-        'Medium': '<br><small style="color: #856404;">⚠ 中等置信度，建议复核</small>',
-        'Low': '<br><small style="color: #721c24;">⚠ 低置信度，建议人工确认</small>'
-    };
-    return hints[confidence] || '';
 }
 
 // 获取紧急程度文本

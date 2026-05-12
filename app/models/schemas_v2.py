@@ -66,6 +66,11 @@ class RepairIntentResponseV2(BaseModel):
         description="紧急程度: High(紧急)/Medium(一般)/Low(不紧急)"
     )
 
+    frontend_display_text: Optional[str] = Field(
+        None,
+        description="一句自然流畅的中文，结合了物件、问题和需要的服务。直接用于前端展示。"
+    )
+
     class Config:
         json_schema_extra = {
             "example": {
@@ -78,7 +83,8 @@ class RepairIntentResponseV2(BaseModel):
                 "category": "机械卡阻与五金故障",
                 "confidence": "Medium",
                 "location": None,
-                "urgency": "Medium"
+                "urgency": "Medium",
+                "frontend_display_text": "办公室玻璃门关不严有缝隙，请安排维修。"
             }
         }
 

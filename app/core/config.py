@@ -19,7 +19,15 @@ class Settings(BaseSettings):
     DEBUG: bool = True
 
     # CORS Configuration
-    ALLOWED_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:8080"]
+    ALLOWED_ORIGINS: List[str] = [
+        "http://localhost:3000",
+        "http://localhost:8080",
+        "http://localhost:8081",
+        "http://127.0.0.1:8080",
+        "http://127.0.0.1:8081",
+        "http://127.0.0.1:3000",
+        "null"  # 允许 file:// 协议访问
+    ]
 
     class Config:
         env_file = ".env"

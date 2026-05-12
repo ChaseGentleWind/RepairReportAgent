@@ -335,6 +335,75 @@ h2 {
     font-style: italic;
 }
 
+/* 新增：主要展示区域样式 */
+.result-main {
+    margin-bottom: 25px;
+}
+
+.display-text {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    font-size: 1.3em;
+    line-height: 1.8;
+    color: #333;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border-left: 4px solid #667eea;
+}
+
+.confirm-hint {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+    padding: 12px 20px;
+    background: #fff3cd;
+    border-left: 4px solid #ffc107;
+    border-radius: 8px;
+}
+
+.hint-icon {
+    font-size: 1.2em;
+}
+
+.hint-text {
+    color: #856404;
+    font-weight: 600;
+    font-size: 0.95em;
+}
+
+/* 元数据网格布局 */
+.result-metadata {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.metadata-item {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.metadata-label {
+    font-size: 0.85em;
+    color: #667eea;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.metadata-value {
+    font-size: 1em;
+    color: #333;
+    font-weight: 500;
+}
+
 /* Error Section */
 .error-container {
     background: #f8d7da;
