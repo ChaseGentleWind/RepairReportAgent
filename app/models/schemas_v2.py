@@ -90,8 +90,8 @@ class RepairIntentResponseV2(BaseModel):
 
 
 class RepairReplyResponse(BaseModel):
-    """简化版响应 - 只包含用户可读的一句话回复"""
-    is_valid: bool = Field(..., description="图片是否有效（清晰且包含办公设施）")
+    """简化版响应 - 模型输出 observation + reply，后端只透传 reply"""
+    observation: str = Field(..., description="模型对图片的客观描述（后端丢弃，不透传给前端）")
     reply: str = Field(..., description="面向用户的一句话回复，直接用于前端展示和工单系统")
 
 

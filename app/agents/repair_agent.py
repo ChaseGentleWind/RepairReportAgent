@@ -57,7 +57,7 @@ class RepairAnalysisAgent:
             result = await self.chain.ainvoke({"image_url": base64_image})
 
             logger.info(
-                f"LangChain 分析完成: is_valid={result.is_valid}"
+                f"LangChain 分析完成: reply={result.reply[:20]}..."
             )
 
             # 转换为字典返回

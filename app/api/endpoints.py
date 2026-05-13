@@ -191,17 +191,7 @@ async def analyze_repair(
         processing_time = round(time.time() - start_time, 2)
         logger.info(f"请求处理完成，耗时: {processing_time}s")
 
-        # 6. 构造响应
-        # 检查图片有效性
-        if not result.get("is_valid"):
-            return JSONResponse(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                content={
-                    "success": False,
-                    "message": result.get("reply", "图片内容无效，请重新拍摄清晰的设备细节")
-                }
-            )
-
+        # 6. 构造响应（observation 字段丢弃，只透传 reply）
         response_data = {
             "success": True,
             "reply": result.get("reply"),
