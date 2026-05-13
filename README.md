@@ -1,15 +1,8 @@
 # Repair Report Agent
 
-多模态 AI 报修助手 — 上传图片，自动生成一句话报修描述。
+上传一张报修图片，自动返回一句话报修描述。
 
 基于通义千问 Qwen3.5-Omni-Flash，通过 LangChain LCEL 管道完成图片理解与结构化输出。
-
-## 特性
-
-- 📸 上传图片即可获得自然语言报修描述（如"空调出风口盖板脱落，请安排维修"）
-- 🚫 自动识别并驳回无效图片（模糊、过暗、内容无关）
-- ⚡ 异步架构，1–3 秒响应
-- 🖥️ 内置 Web 前端，开箱即用
 
 ## 项目结构
 
@@ -32,16 +25,12 @@ RepairReportAgent/
 │   └── core/config.py             # 配置管理
 ├── frontend/                      # 测试用前端（静态页面）
 ├── data/                          # 测试数据（Excel 源文件 + JSON）
-└── scripts/
-    ├── check_config.py
-    └── test_client.py
+└── test_batch_compare.py          # 批量对比测试脚本
 ```
 
 ## 快速开始
 
 ### 方式一：Docker（推荐）
-
-无需安装 Python 环境，只需有 Docker。
 
 ```bash
 # 1. 克隆项目
@@ -57,7 +46,6 @@ docker compose up -d --build
 
 服务启动后访问：
 - API：`http://localhost:8000/api/v1/analyze-repair`
-- 健康检查：`http://localhost:8000/health`
 - Swagger 文档：`http://localhost:8000/docs`
 
 ### 方式二：本地运行
@@ -73,23 +61,34 @@ cp .env.example .env
 # 3. 启动后端
 python main.py
 
-# 4. 启动前端（可选，仅测试用）
-cd frontend && python -m http.server 5500
-# 访问 http://localhost:5500
+# 4. 启动前端（可选）
+cd frontend && python serve.py
+# 访问 http://localhost:8080
 ```
 
 获取 API Key：[阿里云 DashScope 控制台](https://dashscope.console.aliyun.com/)
 
 ## API
 
-**POST `/api/v1/analyze-repair`** — 上传图片，返回报修描述
+### POST `/api/v1/analyze-repair`
+
+上传报修图片，返回一句话报修描述。
+
+**请求**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `file` | `multipart/form-data` | 图片文件，支持 JPEG、PNG、WebP、GIF、BMP、TIFF |
+
+图片会自动压缩至长边 1024px，无需前端预处理。
 
 ```bash
 curl -X POST http://localhost:8000/api/v1/analyze-repair \
   -F "file=@repair_image.jpg"
 ```
 
-成功响应：
+**成功响应（HTTP 200）**
+
 ```json
 {
   "success": true,
@@ -101,28 +100,49 @@ curl -X POST http://localhost:8000/api/v1/analyze-repair \
 }
 ```
 
-图片无效时返回 HTTP 400：
+**图片无效响应（HTTP 400）**
+
+图片模糊、过暗、内容与设施无关时返回：
+
 ```json
 {
   "success": false,
-  "message": "图片内容无效，请重新拍摄清晰的设备细节。"
+  "error": {
+    "code": "INVALID_IMAGE_FORMAT",
+    "message": "不支持的文件格式: text/plain"
+  }
 }
 ```
 
-其他接口：
-- `GET /health` — 健康检查
-- `GET /docs` — Swagger UI
+**服务器错误（HTTP 500）**
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "LLM_ANALYSIS_FAILED",
+    "message": "图片分析失败: API timeout"
+  }
+}
+```
+
+### GET `/health`
+
+健康检查，返回服务状态和当前模型配置。
+
+### GET `/docs`
+
+Swagger UI，可在线调试所有接口。
 
 ## 技术栈
 
 - **FastAPI** + **Uvicorn** — 异步 Web 框架
 - **LangChain LCEL** — `prompt | llm | parser` 管道
 - **通义千问 Qwen3.5-Omni-Flash** — 多模态大模型
-- **Pydantic** — 数据验证与结构化输出
+- **Pydantic** — 结构化输出解析
 - **Pillow** — 图片压缩与格式转换
 
 ## 注意事项
 
 - `.env` 文件不要提交到版本控制，使用 `.env.example` 作为模板
-- 每次调用产生 API 费用，建议设置预算告警
-- 图片长边自动压缩至 1024px，建议前端预压缩以加快传输
+- 每次调用产生 API 费用，建议在阿里云控制台设置预算告警
