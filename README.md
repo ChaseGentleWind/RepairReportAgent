@@ -1,57 +1,41 @@
-# Repair Report Agent Backend
+# Repair Report Agent
 
-多模态 AI Agent 后端服务 - 报修图片智能识别与意图分析
+多模态 AI 报修助手 — 上传图片，自动生成一句话报修描述。
 
-基于通义千问 Qwen3.5-Omni-Flash 多模态大模型，自动识别报修图片中的物件、故障描述和问题分类。
+基于通义千问 Qwen3.5-Omni-Flash，通过 LangChain LCEL 管道完成图片理解与结构化输出。
 
 ## 特性
 
-- 🤖 **AI 视觉推理**: 基于通义千问多模态大模型
-- 📸 **智能图片处理**: 自动压缩、格式转换、质量检测
-- 🎯 **精准识别**: 物件识别、故障分析、问题分类
-- 📊 **置信度评估**: High/Medium/Low 三级置信度
-- 🚫 **智能驳回**: 自动识别无效图片（过暗、模糊、无关内容）
-- ⚡ **高性能**: 异步架构，1-3 秒响应
-- 📝 **结构化输出**: 严格的 JSON Schema 验证
-- 🔒 **完善的错误处理**: 统一的错误响应格式
-- 🖥️ **Web 前端界面**: 简洁美观的图片上传和分析界面
+- 📸 上传图片即可获得自然语言报修描述（如"空调出风口盖板脱落，请安排维修"）
+- 🚫 自动识别并驳回无效图片（模糊、过暗、内容无关）
+- ⚡ 异步架构，1–3 秒响应
+- 🖥️ 内置 Web 前端，开箱即用
 
 ## 项目结构
 
 ```
 RepairReportAgent/
-├── main.py                    # FastAPI 入口
-├── requirements.txt           # 依赖清单
-├── .env                       # 环境变量配置
+├── main.py                        # FastAPI 入口
+├── .env                           # 环境变量（API Key 等）
+├── requirements.txt
 ├── app/
-│   ├── api/
-│   │   └── endpoints.py       # API 路由
-│   ├── core/
-│   │   ├── config.py          # 配置管理
-│   │   └── prompts.py         # System Prompt
-│   ├── models/
-│   │   └── schemas.py         # Pydantic 数据模型
-│   └── services/
-│       ├── image_utils.py     # 图像处理
-│       └── llm_agent.py       # LLM Agent
-├── frontend/                  # Web 前端界面
-│   ├── index.html             # 主页面
-│   ├── style.css              # 样式文件
-│   ├── script.js              # 脚本文件
-│   └── README.md              # 前端使用说明
-├── tests/                     # 测试
-│   ├── test_image_utils.py
-│   ├── test_llm_agent.py
-│   └── test_api.py
-├── scripts/                   # 工具脚本
-│   ├── check_config.py        # 配置检查
-│   └── test_client.py         # 测试客户端
-└── docs/                      # 文档
-    ├── api_guide.md           # API 使用指南
-    ├── llm_agent_guide.md     # LLM Agent 指南
-    ├── image_utils_guide.md   # 图像处理指南
-    ├── phase3_summary.md      # Phase 3 总结
-    └── phase4_summary.md      # Phase 4 总结
+│   ├── api/endpoints.py           # POST /api/v1/analyze-repair
+│   ├── agents/repair_agent.py     # LangChain LCEL Chain
+│   ├── models/schemas_v2.py       # Pydantic 数据模型
+│   ├── prompts/
+│   │   ├── templates.py           # ChatPromptTemplate
+│   │   ├── few_shot_examples.py   # 少样本示例
+│   │   └── fault_dictionary.py    # 故障词典
+│   ├── services/image_utils.py    # 图片压缩 / Base64 编码
+│   └── core/config.py             # 配置管理
+├── frontend/
+│   ├── index.html
+│   ├── style.css
+│   └── script.js
+├── data/                          # 测试图片
+└── scripts/
+    ├── check_config.py
+    └── test_client.py
 ```
 
 ## 快速开始
@@ -62,274 +46,75 @@ RepairReportAgent/
 pip install -r requirements.txt
 ```
 
-### 2. 配置环境变量
-
-编辑 `.env` 文件，填入你的通义千问 API Key：
+### 2. 配置 `.env`
 
 ```env
-# DashScope API Configuration (通义千问)
-DASHSCOPE_API_KEY=your_dashscope_api_key_here
+DASHSCOPE_API_KEY=your_api_key_here
 API_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
-
-# Model Configuration
 MODEL_NAME=qwen3.5-omni-flash
 MAX_IMAGE_SIZE=1024
 ```
 
-**获取 API Key**: 访问 [阿里云 DashScope 控制台](https://dashscope.console.aliyun.com/)
+获取 API Key：[阿里云 DashScope 控制台](https://dashscope.console.aliyun.com/)
 
-### 3. 检查配置
-
-```bash
-python scripts/check_config.py
-```
-
-### 4. 启动服务
+### 3. 启动后端
 
 ```bash
 python main.py
 ```
 
-或使用 uvicorn：
+### 4. 启动前端
 
 ```bash
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
-```
-
-### 5. 访问服务
-
-- **Swagger UI**: http://localhost:8000/docs
-- **ReDoc**: http://localhost:8000/redoc
-- **健康检查**: http://localhost:8000/health
-- **Web 前端**: 见下方"前端界面使用"
-
-## 前端界面使用
-
-### 启动前端
-
-**方法一：Python HTTP 服务器（推荐）**
-
-```bash
-# 在项目根目录，打开新终端
 cd frontend
 python -m http.server 5500
 ```
 
-然后访问: http://localhost:5500
+访问 http://localhost:5500
 
-**方法二：VS Code Live Server**
+## API
 
-1. 安装 "Live Server" 插件
-2. 右键点击 `frontend/index.html`
-3. 选择 "Open with Live Server"
+**POST `/api/v1/analyze-repair`** — 上传图片，返回报修描述
 
-### 使用步骤
-
-1. **上传图片**: 点击或拖拽图片到上传区域
-2. **预览图片**: 查看上传的图片
-3. **开始分析**: 点击"开始分析"按钮
-4. **查看结果**: 查看 AI 分析的结果
-
-详细说明请查看: [前端使用指南](frontend/README.md)
-
-## API 使用
-
-### 核心接口
-
-**POST /api/v1/analyze-repair**
-
-上传报修图片，AI 自动识别物件、故障描述和问题分类。
-
-**请求示例（cURL）：**
 ```bash
 curl -X POST http://localhost:8000/api/v1/analyze-repair \
   -F "file=@repair_image.jpg"
 ```
 
-**请求示例（Python）：**
-```python
-import requests
-
-url = "http://localhost:8000/api/v1/analyze-repair"
-files = {"file": open("repair_image.jpg", "rb")}
-
-response = requests.post(url, files=files)
-result = response.json()
-
-if result["success"] and result["data"]["is_valid_image"]:
-    print(f"物件: {result['data']['object_name']}")
-    print(f"问题: {result['data']['issue_description']}")
-    print(f"置信度: {result['data']['confidence']}")
-```
-
-**响应示例：**
+成功响应：
 ```json
 {
   "success": true,
-  "data": {
-    "is_valid_image": true,
-    "object_name": "空调出风口",
-    "issue_description": "出风口盖板脱落",
-    "reasoning": "图中可见白色塑料盖板与主体分离，且有固定卡扣断裂痕迹",
-    "category": "硬件损坏/老化",
-    "confidence": "High"
-  },
+  "reply": "空调出风口盖板脱落，请安排维修。",
   "metadata": {
     "processing_time": 2.35,
-    "model": "qwen3.5-omni-flash",
     "image_size": "800x600"
   }
 }
 ```
 
-### 测试客户端
-
-```bash
-python scripts/test_client.py test_image.jpg
+图片无效时返回 HTTP 400：
+```json
+{
+  "success": false,
+  "message": "图片内容无效，请重新拍摄清晰的设备细节。"
+}
 ```
+
+其他接口：
+- `GET /api/v1/health` — 健康检查
+- `GET /docs` — Swagger UI
 
 ## 技术栈
 
-- **FastAPI**: 高性能异步 Web 框架
-- **Pydantic**: 数据验证与序列化
-- **OpenAI SDK**: 兼容通义千问 API
-- **通义千问 Qwen3.5-Omni-Flash**: 多模态大模型
-- **Pillow**: 图像处理
-- **Pytest**: 单元测试
-
-## 核心功能
-
-### 1. 图像处理
-- ✅ 支持多种格式（JPEG, PNG, WebP, GIF, BMP, TIFF）
-- ✅ 自动压缩（长边最大 1024px）
-- ✅ 格式转换（统一转为 JPEG）
-- ✅ Base64 编码
-
-### 2. AI 视觉推理
-- ✅ 物件识别
-- ✅ 故障分析
-- ✅ 问题分类（5 大类）
-- ✅ 置信度评估（High/Medium/Low）
-- ✅ 推理原因说明
-
-### 3. 智能驳回
-- ✅ 图片质量检测
-- ✅ 自动驳回无效图片
-- ✅ 提供驳回原因
-
-### 4. 问题分类
-- 硬件损坏/老化
-- 安装/加固需求
-- 异常状态/环境问题
-- 调试/设置需求
-- 未知/需人工确认
-
-## 测试
-
-### 运行所有测试
-
-```bash
-pytest tests/ -v
-```
-
-### 运行特定测试
-
-```bash
-# 图像处理测试
-pytest tests/test_image_utils.py -v
-
-# LLM Agent 测试
-pytest tests/test_llm_agent.py -v
-
-# API 测试
-pytest tests/test_api.py -v
-```
-
-### 测试覆盖
-
-- ✅ 图像处理: 8/8 测试通过
-- ✅ LLM Agent: 9/9 测试通过
-- ✅ API 接口: 11/11 测试通过
-
-## 文档
-
-- [API 使用指南](docs/api_guide.md) - 完整的 API 文档和示例
-- [LLM Agent 指南](docs/llm_agent_guide.md) - Agent 使用说明
-- [图像处理指南](docs/image_utils_guide.md) - 图像处理模块说明
-- [配置说明](CONFIG.md) - 环境配置和模型选择
-- [Phase 3 总结](docs/phase3_summary.md) - LLM Agent 实现总结
-- [Phase 4 总结](docs/phase4_summary.md) - API 路由实现总结
-
-## 开发进度
-
-### Phase 1: 基础设施搭建 ✅
-- [x] 项目目录结构
-- [x] 依赖配置
-- [x] 环境变量配置
-- [x] 数据模型定义
-- [x] FastAPI 基础框架
-- [x] CORS 配置
-
-### Phase 2: 图像处理模块 ✅
-- [x] 图片上传和验证
-- [x] 图片压缩和编码
-- [x] Base64 Data URI 生成
-- [x] 单元测试
-
-### Phase 3: 核心 Agent 逻辑 ✅
-- [x] LLM Agent 实现
-- [x] 通义千问 API 集成
-- [x] 结构化输出
-- [x] 重试机制
-- [x] 单元测试
-
-### Phase 4: API 路由与联调 ✅
-- [x] API 接口实现
-- [x] 错误处理
-- [x] API 文档
-- [x] 测试客户端
-- [x] 集成测试
-
-## 性能指标
-
-- **响应时间**: 1-3 秒
-- **图片处理**: < 0.5 秒
-- **LLM 分析**: 1-2.5 秒
-- **并发支持**: 异步架构，支持高并发
-- **准确率**: 依赖模型能力，建议对 Low 置信度结果人工确认
+- **FastAPI** + **Uvicorn** — 异步 Web 框架
+- **LangChain LCEL** — `prompt | llm | parser` 管道
+- **通义千问 Qwen3.5-Omni-Flash** — 多模态大模型
+- **Pydantic** — 数据验证与结构化输出
+- **Pillow** — 图片压缩与格式转换
 
 ## 注意事项
 
-1. **API Key 安全**: 不要将 `.env` 文件提交到版本控制系统
-2. **成本控制**: 每次调用会产生 API 费用，建议设置预算告警
-3. **置信度处理**: 对 Low 置信度结果进行人工确认
-4. **图片大小**: 建议前端压缩图片，减少传输时间
-5. **并发限制**: 注意 API 限流，避免过高并发
-
-## 故障排查
-
-### 服务无法启动
-
-1. 检查依赖是否安装完整
-2. 检查 `.env` 配置是否正确
-3. 运行配置检查: `python scripts/check_config.py`
-
-### API 调用失败
-
-1. 检查 DASHSCOPE_API_KEY 是否有效
-2. 检查网络连接
-3. 查看服务日志
-
-### 图片分析失败
-
-1. 检查图片格式是否支持
-2. 检查图片是否损坏
-3. 检查 API 配额是否充足
-
-## 许可证
-
-MIT License
-
-## 联系方式
-
-如有问题或建议，请提交 Issue。
+- `.env` 文件不要提交到版本控制
+- 每次调用产生 API 费用，建议设置预算告警
+- 图片长边自动压缩至 1024px，建议前端预压缩以加快传输
