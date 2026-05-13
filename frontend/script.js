@@ -155,72 +155,17 @@ async function analyzeImage() {
 
 // 显示结果
 function showResult(result) {
-    const data = result.data || {};
-    const metadata = result.metadata || {};
-
-    const needsConfirm = !data.is_valid_image || data.confidence === 'Low';
-
-    let displayText = '';
-    if (!data.is_valid_image) {
-        displayText = data.rejection_reason || '图片无效';
-    } else {
-        displayText = `${data.object_name || '未知物件'}: ${data.issue_description || '无描述'}`;
-    }
-
     const html = `
         <div class="result-valid">
             <div class="result-header">
                 <div class="result-icon">✅</div>
                 <div class="result-status">
-                    <h3>分析成功</h3>
-                    <span class="status-badge badge-valid">图片有效</span>
+                    <h3>分析完成</h3>
                 </div>
             </div>
-
-            <div class="result-main">
-                <div class="display-text">
-                    ${escapeHtml(displayText)}
-                </div>
-                ${needsConfirm ? `
-                    <div class="confirm-hint">
-                        <span class="hint-icon">⚠️</span>
-                        <span class="hint-text">AI 盲猜结果，请确认是否准确</span>
-                    </div>
-                ` : ''}
-            </div>
-
-            <div class="result-metadata">
-                <div class="metadata-item">
-                    <span class="metadata-label">问题分类</span>
-                    <span class="metadata-value">${escapeHtml(data.category || '未知')}</span>
-                </div>
-
-                <div class="metadata-item">
-                    <span class="metadata-label">紧急程度</span>
-                    <span class="metadata-value">
-                        <span class="urgency-badge urgency-${(data.urgency || 'medium').toLowerCase()}">
-                            ${getUrgencyText(data.urgency)}
-                        </span>
-                    </span>
-                </div>
-
-                <div class="metadata-item">
-                    <span class="metadata-label">置信度</span>
-                    <span class="metadata-value">
-                        <span class="confidence-badge confidence-${(data.confidence || 'medium').toLowerCase()}">
-                            ${data.confidence || 'Medium'}
-                        </span>
-                    </span>
-                </div>
-
-                <div class="metadata-item">
-                    <span class="metadata-label">处理时间</span>
-                    <span class="metadata-value">${metadata.processing_time?.toFixed(2) || 'N/A'}s</span>
-                </div>
-            </div>
+            <div class="display-text">${escapeHtml(result.reply)}</div>
         </div>
     `;
-
     resultContainer.innerHTML = html;
     resultSection.hidden = false;
 }
@@ -252,16 +197,6 @@ function setLoading(loading) {
     } else {
         btnText.textContent = '开始分析';
     }
-}
-
-// 获取紧急程度文本
-function getUrgencyText(urgency) {
-    const texts = {
-        'High': '🔴 紧急',
-        'Medium': '🟡 一般',
-        'Low': '🟢 不紧急'
-    };
-    return texts[urgency] || urgency;
 }
 
 // HTML 转义

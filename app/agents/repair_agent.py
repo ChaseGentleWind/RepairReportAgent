@@ -2,7 +2,7 @@ import logging
 from typing import Optional
 from langchain_openai import ChatOpenAI
 from langchain.output_parsers import PydanticOutputParser
-from app.models.schemas_v2 import RepairIntentResponseV2
+from app.models.schemas_v2 import RepairReplyResponse
 from app.prompts.templates import get_repair_prompt
 from app.core.config import settings
 
@@ -27,7 +27,7 @@ class RepairAnalysisAgent:
         )
 
         # 2. 初始化 Pydantic 输出解析器
-        self.parser = PydanticOutputParser(pydantic_object=RepairIntentResponseV2)
+        self.parser = PydanticOutputParser(pydantic_object=RepairReplyResponse)
 
         # 3. 获取 Prompt 模板（注入 format_instructions）
         self.prompt = get_repair_prompt(self.parser.get_format_instructions())
@@ -57,8 +57,7 @@ class RepairAnalysisAgent:
             result = await self.chain.ainvoke({"image_url": base64_image})
 
             logger.info(
-                f"LangChain 分析完成: {result.object_name}, "
-                f"置信度: {result.confidence}"
+                f"LangChain 分析完成: is_valid={result.is_valid}"
             )
 
             # 转换为字典返回

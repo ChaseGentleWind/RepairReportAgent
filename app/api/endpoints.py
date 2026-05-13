@@ -32,14 +32,10 @@ router = APIRouter(prefix="/api/v1", tags=["repair-analysis"])
                 "application/json": {
                     "example": {
                         "success": True,
-                        "display_text": "办公室玻璃门关不严有缝隙，请安排维修。",
-                        "needs_human_confirm": True,
+                        "reply": "办公室玻璃门关不严有缝隙，请安排维修。",
                         "metadata": {
                             "processing_time": 2.35,
-                            "image_size": "800x600",
-                            "confidence": "Medium",
-                            "urgency": "Medium",
-                            "category": "机械卡阻与五金故障"
+                            "image_size": "800x600"
                         }
                     }
                 }
@@ -97,14 +93,10 @@ async def analyze_repair(
 
     **返回字段说明：**
     - `success`: 请求是否成功
-    - `display_text`: 前端展示的一句话报修描述（自然流畅的中文）
-    - `needs_human_confirm`: 是否需要人工确认（置信度为 Medium/Low 时为 true）
+    - `reply`: 面向用户的一句话报修描述，直接用于前端展示和工单系统
     - `metadata`: 元数据信息
       - `processing_time`: 处理耗时（秒）
       - `image_size`: 图片尺寸
-      - `confidence`: AI 置信度（High/Medium/Low）
-      - `urgency`: 紧急程度（High/Medium/Low）
-      - `category`: 问题分类
 
     **注意事项：**
     - 图片会自动压缩（长边最大 1024px）
@@ -201,36 +193,23 @@ async def analyze_repair(
 
         # 6. 构造响应
         # 检查图片有效性
-        if not result.get("is_valid_image"):
+        if not result.get("is_valid"):
             return JSONResponse(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 content={
                     "success": False,
-                    "message": result.get("rejection_reason", "图片内容无效")
+                    "message": result.get("reply", "图片内容无效，请重新拍摄清晰的设备细节")
                 }
             )
 
-        # 组装前端友好的响应数据
         response_data = {
             "success": True,
-            "display_text": result.get("frontend_display_text"),
-            "needs_human_confirm": result.get("confidence") in ["Medium", "Low"],
+            "reply": result.get("reply"),
             "metadata": {
                 "processing_time": processing_time,
                 "image_size": f"{image_info['width']}x{image_info['height']}" if image_info else "unknown",
-                "confidence": result.get("confidence"),
-                "urgency": result.get("urgency"),
-                "category": result.get("category")
             }
         }
-
-        # 7. 添加低置信度警告
-        if result.get("confidence") == "Low":
-            response_data["warning"] = {
-                "code": "LOW_CONFIDENCE",
-                "message": "AI 置信度较低，建议人工确认分析结果"
-            }
-            logger.warning(f"低置信度结果: {result.get('object_name')}")
 
         return JSONResponse(
             status_code=status.HTTP_200_OK,

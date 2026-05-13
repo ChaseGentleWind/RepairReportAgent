@@ -89,6 +89,12 @@ class RepairIntentResponseV2(BaseModel):
         }
 
 
+class RepairReplyResponse(BaseModel):
+    """简化版响应 - 只包含用户可读的一句话回复"""
+    is_valid: bool = Field(..., description="图片是否有效（清晰且包含办公设施）")
+    reply: str = Field(..., description="面向用户的一句话回复，直接用于前端展示和工单系统")
+
+
 # 保持向后兼容
 class RepairIntentResponse(BaseModel):
     """
