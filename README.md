@@ -16,8 +16,10 @@
 ```
 RepairReportAgent/
 ├── main.py                        # FastAPI 入口
-├── .env                           # 环境变量（API Key 等）
+├── .env.example                   # 环境变量模板
 ├── requirements.txt
+├── Dockerfile
+├── docker-compose.yml
 ├── app/
 │   ├── api/endpoints.py           # POST /api/v1/analyze-repair
 │   ├── agents/repair_agent.py     # LangChain LCEL Chain
@@ -28,11 +30,8 @@ RepairReportAgent/
 │   │   └── fault_dictionary.py    # 故障词典
 │   ├── services/image_utils.py    # 图片压缩 / Base64 编码
 │   └── core/config.py             # 配置管理
-├── frontend/
-│   ├── index.html
-│   ├── style.css
-│   └── script.js
-├── data/                          # 测试图片
+├── frontend/                      # 测试用前端（静态页面）
+├── data/                          # 测试数据（Excel 源文件 + JSON）
 └── scripts/
     ├── check_config.py
     └── test_client.py
@@ -40,37 +39,46 @@ RepairReportAgent/
 
 ## 快速开始
 
-### 1. 安装依赖
+### 方式一：Docker（推荐）
+
+无需安装 Python 环境，只需有 Docker。
 
 ```bash
-pip install -r requirements.txt
+# 1. 克隆项目
+git clone <repo-url>
+cd RepairReportAgent
+
+# 2. 配置 API Key
+export DASHSCOPE_API_KEY=your_api_key_here
+
+# 3. 构建并启动
+docker compose up -d --build
 ```
 
-### 2. 配置 `.env`
+服务启动后访问：
+- API：`http://localhost:8000/api/v1/analyze-repair`
+- 健康检查：`http://localhost:8000/health`
+- Swagger 文档：`http://localhost:8000/docs`
 
-```env
-DASHSCOPE_API_KEY=your_api_key_here
-API_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
-MODEL_NAME=qwen3.5-omni-flash
-MAX_IMAGE_SIZE=1024
+### 方式二：本地运行
+
+```bash
+# 1. 安装依赖
+pip install -r requirements.txt
+
+# 2. 配置环境变量
+cp .env.example .env
+# 编辑 .env，填入 DASHSCOPE_API_KEY
+
+# 3. 启动后端
+python main.py
+
+# 4. 启动前端（可选，仅测试用）
+cd frontend && python -m http.server 5500
+# 访问 http://localhost:5500
 ```
 
 获取 API Key：[阿里云 DashScope 控制台](https://dashscope.console.aliyun.com/)
-
-### 3. 启动后端
-
-```bash
-python main.py
-```
-
-### 4. 启动前端
-
-```bash
-cd frontend
-python -m http.server 5500
-```
-
-访问 http://localhost:5500
 
 ## API
 
@@ -102,7 +110,7 @@ curl -X POST http://localhost:8000/api/v1/analyze-repair \
 ```
 
 其他接口：
-- `GET /api/v1/health` — 健康检查
+- `GET /health` — 健康检查
 - `GET /docs` — Swagger UI
 
 ## 技术栈
@@ -115,6 +123,6 @@ curl -X POST http://localhost:8000/api/v1/analyze-repair \
 
 ## 注意事项
 
-- `.env` 文件不要提交到版本控制
+- `.env` 文件不要提交到版本控制，使用 `.env.example` 作为模板
 - 每次调用产生 API 费用，建议设置预算告警
 - 图片长边自动压缩至 1024px，建议前端预压缩以加快传输

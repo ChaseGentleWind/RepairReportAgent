@@ -1,0 +1,314 @@
+[
+  {
+    "row_number": 2,
+    "original_reason": "地板铁圈松动",
+    "image_filename": "image1.png",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image1.png"
+  },
+  {
+    "row_number": 3,
+    "original_reason": "茶水间柜子下面踢掉了铁条，自己装歪了",
+    "image_filename": "image2.png",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image2.png"
+  },
+  {
+    "row_number": 4,
+    "original_reason": "帮忙挂一下",
+    "image_filename": "image3.png",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image3.png"
+  },
+  {
+    "row_number": 5,
+    "original_reason": "健身区天花上面裂开",
+    "image_filename": "image4.png",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image4.png"
+  },
+  {
+    "row_number": 6,
+    "original_reason": "健身区射灯不亮",
+    "image_filename": "image5.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image5.jpeg"
+  },
+  {
+    "row_number": 7,
+    "original_reason": "大屏幕发布厅有一块屏显示异常",
+    "image_filename": "image6.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image6.jpeg"
+  },
+  {
+    "row_number": 8,
+    "original_reason": "失去粘性，辛苦帮忙处理下，固定上墙",
+    "image_filename": "image7.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image7.jpeg"
+  },
+  {
+    "row_number": 9,
+    "original_reason": "A1大堂西侧电梯旁屏幕白屏时间过长，请安排调试",
+    "image_filename": null,
+    "image_path": null
+  },
+  {
+    "row_number": 10,
+    "original_reason": "T2栋29楼茶室电视机更换架子，需要带工具过来安装",
+    "image_filename": "image8.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image8.jpeg"
+  },
+  {
+    "row_number": 11,
+    "original_reason": "2号会议室筒灯不亮",
+    "image_filename": "image9.png",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image9.png"
+  },
+  {
+    "row_number": 12,
+    "original_reason": "大茶水间铁柜子 需要带螺丝加固一下，现在已经松了",
+    "image_filename": "image10.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image10.jpeg"
+  },
+  {
+    "row_number": 13,
+    "original_reason": "关闭展厅两个出风口",
+    "image_filename": "image11.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image11.jpeg"
+  },
+  {
+    "row_number": 14,
+    "original_reason": "洗手池下水管脱落漏水",
+    "image_filename": "image12.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image12.jpeg"
+  },
+  {
+    "row_number": 15,
+    "original_reason": "电视松动要帮忙固定",
+    "image_filename": "image13.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image13.jpeg"
+  },
+  {
+    "row_number": 16,
+    "original_reason": "装订钟表",
+    "image_filename": "image14.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image14.jpeg"
+  },
+  {
+    "row_number": 17,
+    "original_reason": "抽纸盒脱落，帮忙固定一下",
+    "image_filename": "image15.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image15.jpeg"
+  },
+  {
+    "row_number": 18,
+    "original_reason": "1004单元玻璃门关不上",
+    "image_filename": "image16.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image16.jpeg"
+  },
+  {
+    "row_number": 19,
+    "original_reason": "门关不上",
+    "image_filename": "image17.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image17.jpeg"
+  },
+  {
+    "row_number": 20,
+    "original_reason": "安装空调挡风板",
+    "image_filename": "image18.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image18.jpeg"
+  },
+  {
+    "row_number": 21,
+    "original_reason": "更换窗帘",
+    "image_filename": "image19.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image19.jpeg"
+  },
+  {
+    "row_number": 22,
+    "original_reason": "拿点玻璃胶粘一下这个柱子",
+    "image_filename": "image20.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image20.jpeg"
+  },
+  {
+    "row_number": 23,
+    "original_reason": "窗帘拉珠卡住了",
+    "image_filename": "image21.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image21.jpeg"
+  },
+  {
+    "row_number": 24,
+    "original_reason": "空调通风口有问题",
+    "image_filename": "image22.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image22.jpeg"
+  },
+  {
+    "row_number": 25,
+    "original_reason": "牌匾挂墙",
+    "image_filename": "image23.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image23.jpeg"
+  },
+  {
+    "row_number": 26,
+    "original_reason": "2座14楼女卫标识不完整",
+    "image_filename": "image24.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image24.jpeg"
+  },
+  {
+    "row_number": 27,
+    "original_reason": "喷头外环掉了",
+    "image_filename": "image25.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image25.jpeg"
+  },
+  {
+    "row_number": 28,
+    "original_reason": "换15根灯管",
+    "image_filename": "image26.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image26.jpeg"
+  },
+  {
+    "row_number": 29,
+    "original_reason": "2号房天花渗水，需要查看原因，及更换一块天花板，现场有材料。",
+    "image_filename": "image27.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image27.jpeg"
+  },
+  {
+    "row_number": 30,
+    "original_reason": "23楼交易管理部柜门锁不住，拉不开，请于今天15:30-16:00安排维修，因为涉及交易时间不能提前，感谢。",
+    "image_filename": null,
+    "image_path": null
+  },
+  {
+    "row_number": 31,
+    "original_reason": "同事工位附近的空调出风口异响",
+    "image_filename": "image28.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image28.jpeg"
+  },
+  {
+    "row_number": 32,
+    "original_reason": "筒灯坏了一直在闪，这个可以帮忙摘掉吗",
+    "image_filename": "image29.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image29.jpeg"
+  },
+  {
+    "row_number": 33,
+    "original_reason": "卫生间第二间有条灯带不亮了",
+    "image_filename": "image30.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image30.jpeg"
+  },
+  {
+    "row_number": 34,
+    "original_reason": "用工具比如尖嘴钳，将碎纸机器的纸张取出来",
+    "image_filename": "image31.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image31.jpeg"
+  },
+  {
+    "row_number": 35,
+    "original_reason": "应急电源电池可能坏了，需要更换一个",
+    "image_filename": "image32.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image32.jpeg"
+  },
+  {
+    "row_number": 36,
+    "original_reason": "灯盘处漏水，烦请2点后来检查看看，谢谢",
+    "image_filename": null,
+    "image_path": null
+  },
+  {
+    "row_number": 37,
+    "original_reason": "换五个灯盘的灯管",
+    "image_filename": "image33.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image33.jpeg"
+  },
+  {
+    "row_number": 38,
+    "original_reason": "请协助关闭指定区域的空调及新风，电",
+    "image_filename": "image34.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image34.jpeg"
+  },
+  {
+    "row_number": 39,
+    "original_reason": "大会议室门卡住关不上，需要维修",
+    "image_filename": "image35.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image35.jpeg"
+  },
+  {
+    "row_number": 40,
+    "original_reason": "T2栋29楼天然氧吧区上方天花板灯带盖板移位，需要带梯子复位",
+    "image_filename": "image36.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image36.jpeg"
+  },
+  {
+    "row_number": 41,
+    "original_reason": "七楼窗帘下落的时候卡住了，现在升上去也卡住",
+    "image_filename": "image37.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image37.jpeg"
+  },
+  {
+    "row_number": 42,
+    "original_reason": "T5-B2车道墙面损坏",
+    "image_filename": "image38.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image38.jpeg"
+  },
+  {
+    "row_number": 43,
+    "original_reason": "女卫左侧洗手池不出水需加急处理",
+    "image_filename": null,
+    "image_path": null
+  },
+  {
+    "row_number": 44,
+    "original_reason": "门锁打不开",
+    "image_filename": "image39.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image39.jpeg"
+  },
+  {
+    "row_number": 45,
+    "original_reason": "电梯厅木饰面门、货梯木饰面门需修补",
+    "image_filename": "image40.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image40.jpeg"
+  },
+  {
+    "row_number": 46,
+    "original_reason": "1704单元有一间会议室钥匙断在锁里面了",
+    "image_filename": "image41.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image41.jpeg"
+  },
+  {
+    "row_number": 47,
+    "original_reason": "电动窗帘 电机不运转！层比较高 需要带3米的梯子",
+    "image_filename": "image42.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image42.jpeg"
+  },
+  {
+    "row_number": 48,
+    "original_reason": "私宴厅西北方向木饰面需修补，30楼灵活工位木饰桌面掉色需修补",
+    "image_filename": "image43.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image43.jpeg"
+  },
+  {
+    "row_number": 49,
+    "original_reason": "6F 不明声响",
+    "image_filename": "image44.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image44.jpeg"
+  },
+  {
+    "row_number": 50,
+    "original_reason": "四楼阳台管道包一下",
+    "image_filename": "image45.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image45.jpeg"
+  },
+  {
+    "row_number": 51,
+    "original_reason": "窗帘掉了",
+    "image_filename": "image46.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image46.jpeg"
+  },
+  {
+    "row_number": 52,
+    "original_reason": "24楼女厕右边最后一个厕所，门背后的挂钩脱落",
+    "image_filename": "image47.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image47.jpeg"
+  },
+  {
+    "row_number": 53,
+    "original_reason": "七楼碎纸机插上电源没反应，帮忙检修",
+    "image_filename": "image48.jpeg",
+    "image_path": "E:\\Codes\\Python\\Python_Vscode\\2026_Projects\\RepairReportAgent\\data\\image48.jpeg"
+  }
+]

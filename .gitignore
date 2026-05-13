@@ -31,8 +31,13 @@ desktop.ini
 *.log
 logs/
 
-# 数据文件 (根据需要调整)
-data/
+# 数据文件：排除解压出的图片和中间产物，保留源文件
+data/image*.png
+data/image*.jpeg
+data/image*.jpg
+data/extracted_data.json
+data/comparison_result.json
+
 test_images/*.jpg
 test_images/*.png
 test_images/*.jpeg
