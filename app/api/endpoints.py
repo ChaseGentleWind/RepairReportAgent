@@ -24,7 +24,7 @@ router = APIRouter(prefix="/api/v1", tags=["repair-analysis"])
     "/analyze-repair",
     response_model=dict,
     summary="分析报修图片",
-    description="上传报修图片，AI 自动识别物件、故障描述和问题分类",
+    description="上传报修图片，AI 自动识别并返回 1-3 个可能的维修选项",
     responses={
         200: {
             "description": "分析成功",
@@ -32,14 +32,19 @@ router = APIRouter(prefix="/api/v1", tags=["repair-analysis"])
                 "application/json": {
                     "example": {
                         "success": True,
-                        "display_text": "办公室玻璃门关不严有缝隙，请安排维修。",
-                        "needs_human_confirm": True,
+                        "suggested_options": [
+                            {
+                                "category": "机械卡阻与五金故障",
+                                "frontend_display_text": "办公室玻璃门地弹簧坏了，门关不严有缝隙。"
+                            },
+                            {
+                                "category": "机械卡阻与五金故障",
+                                "frontend_display_text": "门锁卡住了关不上，请安排维修。"
+                            }
+                        ],
                         "metadata": {
                             "processing_time": 2.35,
-                            "image_size": "800x600",
-                            "confidence": "Medium",
-                            "urgency": "Medium",
-                            "category": "机械卡阻与五金故障"
+                            "image_size": "800x600"
                         }
                     }
                 }
@@ -85,7 +90,7 @@ async def analyze_repair(
     1. 验证图片格式
     2. 压缩并编码图片为 Base64
     3. 调用 LLM 进行视觉推理
-    4. 返回结构化的报修意图
+    4. 返回 1-3 个维修选项供用户选择
 
     **支持的图片格式：**
     - JPEG / JPG
@@ -97,20 +102,17 @@ async def analyze_repair(
 
     **返回字段说明：**
     - `success`: 请求是否成功
-    - `display_text`: 前端展示的一句话报修描述（自然流畅的中文）
-    - `needs_human_confirm`: 是否需要人工确认（置信度为 Medium/Low 时为 true）
+    - `suggested_options`: 建议的维修选项列表（1-3个）
+      - `category`: 问题分类（用于后台派单）
+      - `frontend_display_text`: 一句话报修文案
     - `metadata`: 元数据信息
       - `processing_time`: 处理耗时（秒）
       - `image_size`: 图片尺寸
-      - `confidence`: AI 置信度（High/Medium/Low）
-      - `urgency`: 紧急程度（High/Medium/Low）
-      - `category`: 问题分类
 
     **注意事项：**
     - 图片会自动压缩（长边最大 1024px）
-    - 置信度为 Low 时建议人工确认
-    - 无效图片会被自动驳回
-    - AI 仅通过图片推理，不依赖任何文字描述
+    - 如果 AI 非常确定，只返回 1 个选项
+    - 如果存在歧义，返回 2-3 个选项供用户选择
     """
     start_time = time.time()
     image_info = None
@@ -180,8 +182,8 @@ async def analyze_repair(
         try:
             agent = get_agent()
             result = await agent.analyze(base64_image)
-            logger.info(f"LangChain Agent 分析完成: {result.get('object_name', 'N/A')}, "
-                       f"置信度: {result.get('confidence', 'N/A')}")
+            options = result.get("suggested_options", [])
+            logger.info(f"LangChain Agent 分析完成，返回 {len(options)} 个选项")
         except Exception as e:
             logger.error(f"LLM 分析失败: {str(e)}")
             return JSONResponse(
@@ -199,38 +201,15 @@ async def analyze_repair(
         processing_time = round(time.time() - start_time, 2)
         logger.info(f"请求处理完成，耗时: {processing_time}s")
 
-        # 6. 构造响应
-        # 检查图片有效性
-        if not result.get("is_valid_image"):
-            return JSONResponse(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                content={
-                    "success": False,
-                    "message": result.get("rejection_reason", "图片内容无效")
-                }
-            )
-
-        # 组装前端友好的响应数据
+        # 6. 构造响应（过滤 internal_reasoning，只返回 suggested_options）
         response_data = {
             "success": True,
-            "display_text": result.get("frontend_display_text"),
-            "needs_human_confirm": result.get("confidence") in ["Medium", "Low"],
+            "suggested_options": result.get("suggested_options", []),
             "metadata": {
                 "processing_time": processing_time,
                 "image_size": f"{image_info['width']}x{image_info['height']}" if image_info else "unknown",
-                "confidence": result.get("confidence"),
-                "urgency": result.get("urgency"),
-                "category": result.get("category")
             }
         }
-
-        # 7. 添加低置信度警告
-        if result.get("confidence") == "Low":
-            response_data["warning"] = {
-                "code": "LOW_CONFIDENCE",
-                "message": "AI 置信度较低，建议人工确认分析结果"
-            }
-            logger.warning(f"低置信度结果: {result.get('object_name')}")
 
         return JSONResponse(
             status_code=status.HTTP_200_OK,

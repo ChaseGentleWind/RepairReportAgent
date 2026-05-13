@@ -206,12 +206,9 @@ h2 {
     padding: 30px;
 }
 
-.result-valid {
-    border-left: 5px solid #28a745;
-}
-
-.result-invalid {
-    border-left: 5px solid #dc3545;
+.result-single,
+.result-multiple {
+    animation: fadeIn 0.5s ease;
 }
 
 .result-header {
@@ -227,120 +224,14 @@ h2 {
     font-size: 3em;
 }
 
-.result-status {
-    flex: 1;
-}
-
-.result-status h3 {
+.result-header h3 {
     font-size: 1.5em;
-    margin-bottom: 5px;
-}
-
-.status-badge {
-    display: inline-block;
-    padding: 5px 15px;
-    border-radius: 20px;
-    font-size: 0.9em;
-    font-weight: 600;
-}
-
-.badge-valid {
-    background: #d4edda;
-    color: #155724;
-}
-
-.badge-invalid {
-    background: #f8d7da;
-    color: #721c24;
-}
-
-.result-details {
-    display: grid;
-    gap: 20px;
-}
-
-.detail-item {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
-.detail-label {
-    font-weight: 600;
-    color: #667eea;
-    margin-bottom: 8px;
-    font-size: 0.9em;
-    text-transform: uppercase;
-}
-
-.detail-value {
     color: #333;
-    font-size: 1.1em;
-    line-height: 1.6;
+    margin: 0;
 }
 
-.confidence-badge {
-    display: inline-block;
-    padding: 8px 20px;
-    border-radius: 20px;
-    font-weight: 600;
-    font-size: 1em;
-}
-
-.confidence-high {
-    background: #d4edda;
-    color: #155724;
-}
-
-.confidence-medium {
-    background: #fff3cd;
-    color: #856404;
-}
-
-.confidence-low {
-    background: #f8d7da;
-    color: #721c24;
-}
-
-/* 紧急程度样式 */
-.urgency-badge {
-    display: inline-block;
-    padding: 8px 20px;
-    border-radius: 20px;
-    font-weight: 600;
-    font-size: 1em;
-}
-
-.urgency-high {
-    background: #f8d7da;
-    color: #721c24;
-}
-
-.urgency-medium {
-    background: #fff3cd;
-    color: #856404;
-}
-
-.urgency-low {
-    background: #d4edda;
-    color: #155724;
-}
-
-/* 推理过程样式 */
-.detail-reasoning {
-    color: #666;
-    font-size: 0.95em;
-    line-height: 1.8;
-    font-style: italic;
-}
-
-/* 新增：主要展示区域样式 */
-.result-main {
-    margin-bottom: 25px;
-}
-
-.display-text {
+/* 单选项样式 */
+.result-text {
     background: white;
     padding: 25px;
     border-radius: 10px;
@@ -350,58 +241,109 @@ h2 {
     font-weight: 500;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     border-left: 4px solid #667eea;
+    margin-bottom: 15px;
 }
 
-.confirm-hint {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 15px;
-    padding: 12px 20px;
-    background: #fff3cd;
-    border-left: 4px solid #ffc107;
-    border-radius: 8px;
-}
-
-.hint-icon {
-    font-size: 1.2em;
-}
-
-.hint-text {
-    color: #856404;
-    font-weight: 600;
-    font-size: 0.95em;
-}
-
-/* 元数据网格布局 */
-.result-metadata {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.metadata-item {
-    background: white;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.metadata-label {
-    font-size: 0.85em;
+.result-category {
     color: #667eea;
     font-weight: 600;
-    text-transform: uppercase;
+    font-size: 0.95em;
+    margin-bottom: 20px;
 }
 
-.metadata-value {
-    font-size: 1em;
+/* 多选项样式 */
+.result-hint {
+    color: #666;
+    font-size: 1.1em;
+    margin-bottom: 20px;
+}
+
+.options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.option-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #e0e0e0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.option-card:hover {
+    border-color: #667eea;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+.option-card.selected {
+    border-color: #667eea;
+    background: #f0f3ff;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.option-card input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.option-content {
+    flex: 1;
+}
+
+.option-text {
+    font-size: 1.1em;
     color: #333;
     font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.option-category {
+    font-size: 0.9em;
+    color: #667eea;
+    font-weight: 600;
+}
+
+/* 确认按钮 */
+.confirm-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.confirm-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.confirm-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* 元数据 */
+.result-metadata {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+    text-align: center;
+    color: #999;
+    font-size: 0.9em;
 }
 
 /* Error Section */
