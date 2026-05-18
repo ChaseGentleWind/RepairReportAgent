@@ -13,6 +13,12 @@ class Settings(BaseSettings):
     MODEL_NAME: str = "qwen3.5-omni-flash"
     MAX_IMAGE_SIZE: int = 1024
 
+    # RAG Configuration
+    TAGGING_MODEL_NAME: str = "qwen-vl-plus"
+    EMBEDDING_MODEL_NAME: str = "text-embedding-v3"
+    CHROMA_DB_PATH: str = "./data/chroma_db"
+    RAG_SIMILARITY_THRESHOLD: float = 0.55
+
     # Server Configuration
     HOST: str = "0.0.0.0"
     PORT: int = 8000
@@ -32,6 +38,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
+        extra = "ignore"
 
 
 settings = Settings()

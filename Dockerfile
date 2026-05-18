@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM registry.cn-hangzhou.aliyuncs.com/library/python:3.11-slim
 
 WORKDIR /app
 
@@ -9,6 +9,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # 只复制后端代码
 COPY main.py .
 COPY app/ ./app/
+
+# 确保 ChromaDB 持久化目录存在
+RUN mkdir -p /app/data/chroma_db
 
 EXPOSE 8000
 

@@ -32,9 +32,17 @@ router = APIRouter(prefix="/api/v1", tags=["repair-analysis"])
                 "application/json": {
                     "example": {
                         "success": True,
-                        "reply": "办公室玻璃门关不严有缝隙，请安排维修。",
+                        "suggested_option": "车库倒车杆被撞弯变形，需要派人维修或更换。",
+                        "reply": "车库倒车杆被撞弯变形，需要派人维修或更换。",
+                        "dispatch_info": {
+                            "专业工种": "装修技工",
+                            "工单类型": "WH公共工单",
+                            "响应时限": "30分钟到场",
+                            "参考规程": "QHKC-WI-MT-01 §5.4"
+                        },
+                        "rag_used": True,
                         "metadata": {
-                            "processing_time": 2.35,
+                            "processing_time": 2.8,
                             "image_size": "800x600"
                         }
                     }
@@ -191,10 +199,14 @@ async def analyze_repair(
         processing_time = round(time.time() - start_time, 2)
         logger.info(f"请求处理完成，耗时: {processing_time}s")
 
-        # 6. 构造响应（observation 字段丢弃，只透传 reply）
+        # 6. 构造响应（observation 字段丢弃，不透传给前端）
+        suggested = result.get("reply")
         response_data = {
             "success": True,
-            "reply": result.get("reply"),
+            "suggested_option": suggested,
+            "reply": suggested,  # 向后兼容
+            "dispatch_info": result.get("dispatch_info"),
+            "rag_used": result.get("rag_used", False),
             "metadata": {
                 "processing_time": processing_time,
                 "image_size": f"{image_info['width']}x{image_info['height']}" if image_info else "unknown",

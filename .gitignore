@@ -37,10 +37,14 @@ data/image*.jpeg
 data/image*.jpg
 data/extracted_data.json
 data/comparison_result.json
+data/chroma_db/
 
 test_images/*.jpg
 test_images/*.png
 test_images/*.jpeg
+
+# 作业指导书
+三级保养类作业指导书/
 
 # 临时文件
 *.tmp

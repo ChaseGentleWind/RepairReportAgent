@@ -90,9 +90,16 @@ class RepairIntentResponseV2(BaseModel):
 
 
 class RepairReplyResponse(BaseModel):
-    """简化版响应 - 模型输出 observation + reply，后端只透传 reply"""
+    """简化版响应 - 模型输出 observation + reply + category，后端附加路由信息"""
     observation: str = Field(..., description="模型对图片的客观描述（后端丢弃，不透传给前端）")
     reply: str = Field(..., description="面向用户的一句话回复，直接用于前端展示和工单系统")
+    category: Literal[
+        "物理破损与脱落",
+        "机械卡阻与五金故障",
+        "功能失效与环境异常",
+        "安装/加固/拆卸需求",
+        "未知/需人工确认",
+    ] = Field(default="未知/需人工确认", description="故障分类，用于派工路由")
 
 
 # 保持向后兼容
